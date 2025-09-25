@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAK SIM DATABASE BY R2H AHSAN</title>
+<style>
+/* ---- Existing CSS + WhatsApp button CSS ---- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #fff; min-height: 100vh; overflow-x: hidden; }
+.container { max-width: 800px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #333; margin-bottom: 40px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 40px; height: 40px; background: linear-gradient(45deg, #00ff88, #00cc6a); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #000; }
+.logo-text { font-size: 24px; font-weight: bold; color: #00ff88; letter-spacing: 2px; }
+.status { display: flex; align-items: center; gap: 8px; color: #888; font-size: 14px; }
+.status-dot { width: 8px; height: 8px; background: #00ff88; border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+.main-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 0; }
+.title { font-size: 48px; font-weight: bold; color: #00ff88; margin-bottom: 20px; letter-spacing: 3px; text-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+.subtitle { font-size: 18px; color: #888; margin-bottom: 10px; letter-spacing: 4px; text-transform: uppercase; }
+.description { font-size: 16px; color: #666; margin-bottom: 60px; max-width: 600px; line-height: 1.6; }
+.search-section { width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+.search-title { display: flex; align-items: center; gap: 15px; font-size: 24px; color: #00ff88; margin-bottom: 30px; font-weight: 600; }
+.search-icon { width: 30px; height: 30px; background: #00ff88; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; }
+.input-group { margin-bottom: 30px; }
+.input-label { display: block; color: #888; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.phone-input-container { display: flex; gap: 0; border-radius: 15px; overflow: hidden; border: 2px solid #333; transition: border-color 0.3s ease; }
+.phone-input-container:focus-within { border-color: #00ff88; box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+.country-code { background: #222; color: #fff; padding: 15px 20px; font-size: 16px; border: none; outline: none; min-width: 80px; text-align: center; }
+.phone-input { flex: 1; background: #1a1a1a; color: #fff; padding: 15px 20px; font-size: 16px; border: none; outline: none; }
+.phone-input::placeholder { color: #666; }
+.search-button { width: 100%; background: linear-gradient(45deg, #00ff88, #00cc6a); color: #000; border: none; padding: 18px; font-size: 18px; font-weight: bold; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.search-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3); }
+.search-button:active { transform: translateY(0); }
+.search-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.loading { display: none; width: 20px; height: 20px; border: 2px solid #000; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.result-section { margin-top: 40px; display: none; width: 100%; max-width: 600px; }
+.result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.result-box { background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; border-radius: 15px; padding: 25px; text-align: left; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.result-box:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 255, 136, 0.2); }
+.result-box-title { color: #00ff88; font-size: 16px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+.result-box-data { color: #fff; font-size: 18px; line-height: 1.6; word-wrap: break-word; }
+
+.error-section { margin-top: 30px; padding: 20px; background: rgba(255, 0, 0, 0.1); border: 1px solid #ff4444; border-radius: 15px; display: none; text-align: center; }
+.error-title { color: #ff4444; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+.whatsapp-contact { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; background: #25D366; color: #061018; padding: 10px 16px; border-radius: 999px; font-weight: 600; margin-top: 15px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.whatsapp-contact:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+.whatsapp-contact .whatsapp-icon { width: 24px; height: 24px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+
+.footer { text-align: center; padding: 40px 0 20px; border-top: 1px solid #333; margin-top: 60px; }
+.footer-text { color: #666; font-size: 14px; margin-bottom: 15px; }
+.footer a { display: inline-flex; align-items: center; gap: 10px; color: #00ff88; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+.footer a:hover { color: #00cc6a; }
+.footer .whatsapp-icon { width: 24px; height: 24px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; }
+
+/* Floating Social Buttons */
+.floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999;
+}
+.float-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+.float-btn img {
+  width: 28px;
+  height: 28px;
+}
+.float-btn:hover {
+  transform: scale(1.1);
+}
+.float-btn.whatsapp {
+  background: #25D366;
+}
+.float-btn.instagram {
+  background: #E1306C;
+}
+
+@media (max-width: 768px) {
+    .container { padding: 15px; }
+    .title { font-size: 36px; letter-spacing: 2px; }
+    .subtitle { font-size: 16px; letter-spacing: 2px; }
+    .search-section { padding: 30px 20px; }
+    .phone-input-container { flex-direction: column; }
+    .country-code { border-radius: 0; }
+}
+@media (max-width: 480px) {
+    .title { font-size: 28px; letter-spacing: 1px; }
+    .header { flex-direction: column; gap: 15px; text-align: center; }
+    .search-section { padding: 25px 15px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">♦</div>
+            <div class="logo-text">PAK SIM Database</div>
+        </div>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>SYSTEM ONLINE</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="title">PAK SIM DATABASE BY R2H AHSAN</h1>
+        <p class="subtitle">ADVANCED INFORMATION LOOKUP SYSTEM</p>
+        <p class="description">SECURE AND RELIABLE PAKISTAN SIM CARD INFORMATION RETRIEVAL SYSTEM</p>
+
+        <div class="search-section">
+            <div class="search-title">
+                <div class="search-icon">🔍</div>
+                <span>DATABASE QUERY</span>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">MOBILE NUMBER</label>
+                <div class="phone-input-container">
+                    <input type="text" class="country-code" value="+92" readonly>
+                    <input type="tel" class="phone-input" id="phoneNumber" placeholder="3012345678" maxlength="10">
+                </div>
+            </div>
+
+            <button class="search-button" id="searchButton">
+                <div class="loading" id="loading"></div>
+                <span id="buttonText">SEARCH DATABASE</span>
+            </button>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-grid">
+                <div class="result-box">
+                    <div class="result-box-title">NAME</div>
+                    <div class="result-box-data" id="resultName">-</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-box-title">CNIC Number</div>
+                    <div class="result-box-data" id="resultCnic">-</div>
+                </div>
+                <div class="result-box" style="grid-column: 1 / -1;">
+                    <div class="result-box-title">ADDRESS</div>
+                    <div class="result-box-data" id="resultAddress">-</div>
+                </div>
+                <div class="result-box" style="grid-column: 1 / -1;">
+                    <div class="result-box-title">ALL NUMBERS</div>
+                    <div class="result-box-data" id="resultNumbers">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-section" id="errorSection">
+            <div class="error-title">Error</div>
+            <div class="result-data" id="errorData"></div>
+            <a href="https://wa.me/923336181194" target="_blank" class="whatsapp-contact" id="whatsappButton">
+                <div class="whatsapp-icon">📱</div>
+                <span>CONTACT ON WHATSAPP</span>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text">DEVELOP BY R2H Team</p>
+        <a href="https://whatsapp.com/channel/0029VbAy8sq4Spk82e61hS0F" target="_blank">
+            <div class="whatsapp-icon">📱</div>
+            <span>FOLLOW ON WHATSAPP</span>
+        </a>
+    </footer>
+</div>
+
+<!-- Floating Buttons -->
+<div class="floating-buttons">
+  <a href="https://api.whatsapp.com/send/?phone=923336181194&text&type=phone_number&app_absent=0" target="_blank" class="float-btn whatsapp">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+  </a>
+  <a href="https://www.instagram.com/wtf._.rude._/" target="_blank" class="float-btn instagram">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+  </a>
+</div>
+
+<script>
+const phoneInput = document.getElementById('phoneNumber');
+const searchButton = document.getElementById('searchButton');
+const loading = document.getElementById('loading');
+const buttonText = document.getElementById('buttonText');
+const resultSection = document.getElementById('resultSection');
+const errorSection = document.getElementById('errorSection');
+const errorData = document.getElementById('errorData');
+const whatsappButton = document.getElementById('whatsappButton');
+
+const resultName = document.getElementById('resultName');
+const resultCnic = document.getElementById('resultCnic');
+const resultAddress = document.getElementById('resultAddress');
+const resultNumbers = document.getElementById('resultNumbers');
+
+phoneInput.addEventListener('input', function(e){
+    let value = e.target.value.replace(/\D/g, '');
+    if(value.length > 10) value = value.substring(0,10);
+    e.target.value = value;
+});
+phoneInput.addEventListener('keypress', function(e){
+    if(e.key==='Enter') searchDatabase();
+});
+searchButton.addEventListener('click', searchDatabase);
+
+async function searchDatabase(){
+    const phoneNumber = phoneInput.value.trim();
+    if(!phoneNumber || phoneNumber.length!==10){
+        showError('Please enter a valid 10-digit phone number');
+        return;
+    }
+
+    setLoading(true);
+    hideResults();
+
+    try{
+        const fullNumber = '0'+phoneNumber;
+        const apiUrl = `https://simownership.pro/search.php?type=mobile&search=${fullNumber}`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+        const response = await fetch(proxyUrl);
+        if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+        const resultContent = data.contents;
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(resultContent,"text/html");
+        const row = doc.querySelector("tbody tr");
+
+        if(row){
+            const cols = row.querySelectorAll("td");
+            const jsonData = {
+                name: cols[1]?.textContent.trim() || 'N/A',
+                cnic: cols[2]?.textContent.trim() || 'N/A',
+                address: cols[3]?.textContent.trim() || 'N/A',
+                numbers: cols[0]?.textContent.trim() || 'N/A'
+            };
+            displayResult(jsonData);
+        } else{
+            showError("No result found for this number.");
+        }
+
+    }catch(error){
+        console.error('Error:',error);
+        showError('Failed to fetch data. Please check your internet connection and try again.');
+    }finally{
+        setLoading(false);
+    }
+}
+
+function setLoading(isLoading){
+    loading.style.display = isLoading ? 'block':'none';
+    buttonText.textContent = isLoading ? 'SEARCHING...' : 'SEARCH DATABASE';
+    searchButton.disabled = isLoading;
+}
+
+function displayResult(data){
+    hideError();
+    resultName.textContent = data.name||'N/A';
+    resultCnic.textContent = data.cnic||'N/A';
+    resultAddress.textContent = data.address||'N/A';
+    resultNumbers.textContent = data.numbers||'N/A';
+    resultSection.style.display='block';
+}
+
+function showError(message){
+    hideResults();
+    errorData.textContent = message;
+    errorSection.style.display='block';
+}
+
+function hideError(){ errorSection.style.display='none'; }
+function hideResults(){ resultSection.style.display='none'; }
+</script>
+</body>
+</html>
